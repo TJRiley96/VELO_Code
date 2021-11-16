@@ -20,11 +20,15 @@ class BottomNavBar extends StatelessWidget{
                 icon: const Icon(Icons.timer_outlined)),
             IconButton(
               tooltip: 'VELO Icon',
-              onPressed: (){},
+              onPressed: (){
+                Navigator.of(context).pushNamed('home');
+              },
               icon: const Icon(Icons.circle)),
             IconButton(
                 tooltip: 'Setting Menu',
-                onPressed: (){},
+                onPressed: (){
+                  Navigator.of(context).pushNamed('/settings');
+                },
                 icon: const Icon(Icons.settings)),
             IconButton(
                 tooltip: 'Notes',
