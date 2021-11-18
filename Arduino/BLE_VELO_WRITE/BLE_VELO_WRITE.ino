@@ -77,7 +77,7 @@ void setup(){
 
     pairingInterrupt = false;
     //Create the BLE Device
-    BLEDevice::init("ESP32_VELO_2");
+    BLEDevice::init("ESP32_VELO_ENCLOSED");
 
 
     //Create BLE Server
@@ -131,14 +131,14 @@ void loop(){
 
         Serial.println((String)"Raw:" + rawValue + " Voltage:" + voltageLevel + "V Percent: " + (batteryFraction * 100));
         float txArr[7];
-        txValue =  random(-10, 20);
+        //txValue =  random(-10, 20);
         txArr[0] = millis() / 1000;
         txArr[1] = voltageLevel;
         txArr[2] = batteryFraction * 100;
-        txArr[3] = random(-300, 500);
-        txArr[4] = random(-300, 500);
-        txArr[5] = random(-300, 500);
-        txArr[6] = 4;
+        //txArr[3] = random(-300, 500);
+        //txArr[4] = random(-300, 500);
+        //txArr[5] = random(-300, 500);
+//        txArr[6] = 4;
         String tempString;
         char txString[8];
         char txData[128];
@@ -149,6 +149,7 @@ void loop(){
                 tempString += ", ";  
             } 
         }*/
+        Serial.println("1: Still Working");
         tempString = "0:,";
         dtostrf(txArr[0], 1, 2, txString);
         tempString = tempString + String(txString) + "s,";
@@ -158,30 +159,32 @@ void loop(){
 
         dtostrf(txArr[2], 1, 2, txString);
         tempString = tempString + String(txString) + "%";
-        
-        Serial2.write(0xFF);
-        String tmp = Serial2.readString();
+
+        Serial.println("2: Still Working");
+//        Serial2.write(0xFF);
+//        String tmp = Serial2.readString();
         
         tempString.toCharArray(txData, 128);
-        pCharacteristic -> setValue(txData);
-        pCharacteristic->notify();
+//        pCharacteristic -> setValue(txData);
+//        pCharacteristic->notify();
 
         delay(1000);
         Serial.println("Data Sent\n=================");
         Serial.println(txData);
 
-        /*tempString = "1:";
-        tempString = tempString + tmp;
+         Serial.println("3: Still Working");
+        tempString = "1:,";
+        //tempString = tempString + tmp;
         tempString.toCharArray(txData, 128);
         Serial.println(txData);
         
-        //Setting the value to the characteristic
-        pCharacteristic -> setValue(txData);
-
-        //Notifying the connected the client
-        pCharacteristic->notify();
+//        //Setting the value to the characteristic
+//        pCharacteristic -> setValue(txData);
+//
+//        //Notifying the connected the client
+//        pCharacteristic->notify();
         
-        delay(1000);*/
+        delay(1000);
     }
   
 }
