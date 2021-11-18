@@ -113,7 +113,7 @@ void setup(){
     pServer->getAdvertising()->start();
     Serial.println("Waiting for client connection to notify...");
 
-	
+  
 }
 
 void loop(){
@@ -127,14 +127,14 @@ void loop(){
         
         int rawValue = analogRead(A13);
         float voltageLevel = (rawValue / 4095.0) * 2 * 1.1 * 3.3; // calculate voltage level
-        float batteryFraction = voltageLevel / BAT_VOLTAGE;
+        float batteryFraction = (voltageLevel - 3.0)/ 1.03 ;
 
-        Serial.println((String)"Raw:" + rawValue + " Voltage:" + voltageLevel + "V Percent: " + (batteryFraction * 100) + "%");
-        int txArr[7];
+        Serial.println((String)"Raw:" + rawValue + " Voltage:" + voltageLevel + "V Percent: " + (batteryFraction * 100));
+        float txArr[7];
         txValue =  random(-10, 20);
-        txArr[0] = millis();
-        txArr[1] = random(0, 30);
-        txArr[2] = random(0, 10);
+        txArr[0] = millis() / 1000;
+        txArr[1] = voltageLevel;
+        txArr[2] = batteryFraction * 100;
         txArr[3] = random(-300, 500);
         txArr[4] = random(-300, 500);
         txArr[5] = random(-300, 500);
@@ -142,30 +142,46 @@ void loop(){
         String tempString;
         char txString[8];
         char txData[128];
-        for(int j = 0; j < 7; j++){
+        /*for(int j = 0; j < 7; j++){
             dtostrf(txArr[j], 1, 2, txString);
             tempString += String(txString);
             if(j <= 5){
                 tempString += ", ";  
             } 
-        }
-        Serial2.write(0xFF);
-        tempString = tempString + ", " + Serial2.readString();
+        }*/
+        tempString = "0:,";
+        dtostrf(txArr[0], 1, 2, txString);
+        tempString = tempString + String(txString) + "s,";
 
-        tempString = tempString + ", %" + String(batteryFraction*100);
-        //Serial.println(tempString);
-        //Serial.println(digitalRead(pairingButton));
+        dtostrf(txArr[1], 1, 2, txString);
+        tempString = tempString + String(txString) + "V,";
+
+        dtostrf(txArr[2], 1, 2, txString);
+        tempString = tempString + String(txString) + "%";
+        
+        Serial2.write(0xFF);
+        String tmp = Serial2.readString();
+        
         tempString.toCharArray(txData, 128);
-        Serial.println(Serial2.readString());
+        pCharacteristic -> setValue(txData);
+        pCharacteristic->notify();
+
+        delay(1000);
+        Serial.println("Data Sent\n=================");
         Serial.println(txData);
-       // txArrStr[0] = txArrStr[0] + "," + txArrStr[1] + "," + txArrStr[2] + "," + txArrStr[3] + "," + txArrStr[4] + "," + txArrStr[5] + "," + txArrStr[6];
+
+        /*tempString = "1:";
+        tempString = tempString + tmp;
+        tempString.toCharArray(txData, 128);
+        Serial.println(txData);
+        
         //Setting the value to the characteristic
         pCharacteristic -> setValue(txData);
 
         //Notifying the connected the client
         pCharacteristic->notify();
-        //Serial.println("Sent Value: [" + txArrStr[0] + "," + txArrStr[1] + "," + txArrStr[2] + "," + txArrStr[3] + "," + txArrStr[4] + "," + txArrStr[5] + "," + txArrStr[6] + "]");
-        delay(50);
+        
+        delay(1000);*/
     }
-	
+  
 }

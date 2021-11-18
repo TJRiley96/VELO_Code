@@ -1,11 +1,15 @@
 // Copyright 2017, Paul DeMarco.
 // All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+import 'dart:io';
+
+import 'package:path_provider/path_provider.dart';
 import 'package:velo_debug/globals.dart' as globals;
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
+import "package:velo_debug/components/write_file.dart";
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:velo_debug/screens/bluetooth/widgets.dart';
@@ -95,7 +99,7 @@ class FindDevicesScreen extends StatelessWidget {
                                     onPressed: () => Navigator.of(context).push(
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                DeviceScreen(device: d))),
+                                                DeviceScreen(device: d,))),
                                   );
                                 }
                                 return Text(snapshot.data.toString());
@@ -150,8 +154,8 @@ class FindDevicesScreen extends StatelessWidget {
 }
 
 class DeviceScreen extends StatelessWidget {
-  const DeviceScreen({Key? key, required this.device}) : super(key: key);
 
+  const DeviceScreen({Key? key, required this.device}) : super(key: key);
   final BluetoothDevice device;
 
   List<int> _getRandomBytes() {
@@ -182,7 +186,7 @@ class DeviceScreen extends StatelessWidget {
                       await c.setNotifyValue(!c.isNotifying);
                       c.value.listen((value) {
                         final decoded = utf8.decode(value);
-                        globals.BLEData =  decoded;
+                        globals.updateGlobal(decoded);
                         print(decoded);
                       });
                       await c.read();

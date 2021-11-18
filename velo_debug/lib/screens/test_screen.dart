@@ -19,8 +19,8 @@ class TestScreen extends StatelessWidget {
       body: _buildContent(),
     );
   }
-  List<dynamic> _formatData() {
-    List<dynamic> data = <String>['?', '?','?','?'];
+  List<String> _formatData() {
+    List<String> data = <String>['?', '?','?','?'];
 
     if(globals.BLEData != '') {
       for(int i = 0; i < data.length - 1; i++) {
@@ -33,7 +33,7 @@ class TestScreen extends StatelessWidget {
   }
 
   Widget _buildContent() {
-    List<dynamic> data = _formatData();
+    List<String> data = _formatData();
     return Container(
       color: Colors.black45,
       padding: EdgeInsets.all(16.0),
