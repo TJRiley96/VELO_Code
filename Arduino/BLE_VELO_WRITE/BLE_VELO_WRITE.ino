@@ -170,7 +170,7 @@ void loop(){
         Serial.println("Data Sent\n=================");
         Serial.println(txData);
 
-        /*tempString = "1:";
+        tempString = "1:";
         tempString = tempString + tmp;
         tempString.toCharArray(txData, 128);
         Serial.println(txData);
@@ -181,7 +181,7 @@ void loop(){
         //Notifying the connected the client
         pCharacteristic->notify();
         
-        delay(1000);*/
+        delay(1000);
     }
   
 }

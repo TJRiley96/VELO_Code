@@ -19,10 +19,10 @@ class TestScreen extends StatelessWidget {
       body: _buildContent(),
     );
   }
-  List<String> _formatData() {
+  /*List<String> _formatData() {
     List<String> data = <String>['?', '?','?','?'];
 
-    if(globals.BLEData != '') {
+    if(globals.receivedData.isNotEmpty) {
       for(int i = 0; i < data.length - 1; i++) {
         data[i] = globals.BLEData.split(', ')[i];
       }
@@ -30,10 +30,9 @@ class TestScreen extends StatelessWidget {
     }
 
     return data;
-  }
+  }*/
 
   Widget _buildContent() {
-    List<String> data = _formatData();
     return Container(
       color: Colors.black45,
       padding: EdgeInsets.all(16.0),
@@ -51,7 +50,7 @@ class TestScreen extends StatelessWidget {
             ),
           ),
           Text(
-            "              TIME: " + data[0],
+            "              TIME: " + globals.receivedData[0],
             textAlign: TextAlign.left,
             style: TextStyle(
               color: Colors.white,
@@ -60,7 +59,7 @@ class TestScreen extends StatelessWidget {
             ),
           ),
           Text(
-            "      VOLTAGE: " + data[1],
+            "      VOLTAGE: " + globals.receivedData[1],
             textAlign: TextAlign.left,
             style: TextStyle(
               color: Colors.white,
@@ -69,7 +68,7 @@ class TestScreen extends StatelessWidget {
             ),
           ),
           Text(
-            "BATTERY(%): " + data[2],
+            "BATTERY(%): " + globals.receivedData[2],
             textAlign: TextAlign.left,
             style: TextStyle(
               color: Colors.white,
@@ -78,7 +77,7 @@ class TestScreen extends StatelessWidget {
             ),
           ),
           Text(
-            "       FLEXION: " + data[3],
+            "       FLEXION: " + globals.receivedData[3],
             textAlign: TextAlign.left,
             style: TextStyle(
               color: Colors.white,
