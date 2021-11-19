@@ -1,3 +1,4 @@
+import 'package:velo_debug/components/read_file.dart';
 import 'package:velo_debug/globals.dart' as globals;
 
 import 'dart:async';
@@ -7,9 +8,39 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:velo_debug/components/navbar.dart';
 
-class TestScreen extends StatelessWidget {
+class TestScreen extends StatefulWidget {
+  final Reading file = Reading();
+ /* void _setup(){
+    for(int i = 0; i < 10; i++){data.add('?');}
+  }*/
+  @override
+  State<TestScreen> createState() => _TestScreenState();
+}
+
+class _TestScreenState extends State<TestScreen> {
+  List<String> data = <String>[];
+  /*TestScreenState(){
+
+    });
+  }*/
+  @override
+  void initState() {
+    // TODO: implement initState
+    widget.file.readFromFile().then((value) {
+      setState(() {
+        data = value;
+      });
+    });
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+
+  }
+
   @override
   Widget build(BuildContext context) {
+    _formatData();
     return Scaffold(
       appBar: AppBar(
         title: Text("Bluetooth Values Recieved"),
@@ -17,23 +48,30 @@ class TestScreen extends StatelessWidget {
       ),
       bottomNavigationBar: BottomNavBar(),
       body: _buildContent(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){
+            widget.file.readFromFile().then((value){
+              setState(() {
+                data = value;
+              });
+            });
+
+        },
+        tooltip: "Refresh Data",
+        child: const Icon(Icons.refresh_outlined),
+      ),
     );
   }
-  List<String> _formatData() {
-    List<String> data = <String>['?', '?','?','?'];
-
-    if(globals.BLEData != '') {
-      for(int i = 0; i < data.length - 1; i++) {
-        data[i] = globals.BLEData.split(', ')[i];
-      }
-      return data;
-    }
-
-    return data;
+  Future<List<String>> _formatData(){
+    setState(() {
+    });
+    return widget.file.readFromFile();
   }
 
   Widget _buildContent() {
-    List<String> data = _formatData();
+    _formatData();
+    //print("Global: " + globals.getData().join(',').toString());
+    print("Data: " + data.join(','));
     return Container(
       color: Colors.black45,
       padding: EdgeInsets.all(16.0),
@@ -42,7 +80,7 @@ class TestScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Text(
-              "Incoming Data",
+            "Incoming Data",
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white,
