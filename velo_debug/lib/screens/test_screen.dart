@@ -89,7 +89,7 @@ class _TestScreenState extends State<TestScreen> {
             ),
           ),
           Text(
-            "              TIME: " + data[0],
+            "              TIME: " + data[0] + "s",
             textAlign: TextAlign.left,
             style: TextStyle(
               color: Colors.white,
@@ -98,7 +98,7 @@ class _TestScreenState extends State<TestScreen> {
             ),
           ),
           Text(
-            "      VOLTAGE: " + data[1],
+            "      VOLTAGE: " + data[1] + "V",
             textAlign: TextAlign.left,
             style: TextStyle(
               color: Colors.white,
@@ -107,7 +107,7 @@ class _TestScreenState extends State<TestScreen> {
             ),
           ),
           Text(
-            "BATTERY(%): " + data[2],
+            "BATTERY(%): " + data[2] + "%",
             textAlign: TextAlign.left,
             style: TextStyle(
               color: Colors.white,
@@ -116,7 +116,7 @@ class _TestScreenState extends State<TestScreen> {
             ),
           ),
           Text(
-            "       FLEXION: " + data[3],
+            "           X-Axis: " + data[3],
             textAlign: TextAlign.left,
             style: TextStyle(
               color: Colors.white,
@@ -124,6 +124,34 @@ class _TestScreenState extends State<TestScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
+          Text(
+            "           Y-Axis: " + data[4],
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            "           Z-Axis: " + data[5],
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            "               Flex: " + data[6],
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
           /*Container(
             color: Colors.deepOrangeAccent,
             alignment: Alignment.center,

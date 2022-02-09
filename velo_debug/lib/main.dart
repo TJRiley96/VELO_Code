@@ -7,6 +7,7 @@ import 'package:velo_debug/test.dart';
 
 void main() {
   runApp(MyApp());
+  //ErrorWidget.builder = (FlutterErrorDetails details) => Container();
 }
 
 class MyApp extends StatelessWidget {
@@ -16,7 +17,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'VELO Debug',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: Color(0xFFFFE8D6),
+        backgroundColor: Color(0xFF15232B),
+        accentColor: Color(0xFFFF4D19),
+        textTheme: TextTheme(
+          bodyText2: TextStyle(
+            color: Color(0xFF333333),
+          )
+        ),
+        primarySwatch: Colors.orange,
       ),
       initialRoute: '/',
       onGenerateRoute: RouteGenerator.generateRoute,

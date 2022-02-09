@@ -169,6 +169,7 @@ class DeviceScreen extends StatelessWidget {
   }
 
   List<Widget> _buildServiceTiles(List<BluetoothService> services) {
+    String oldValue = "";
     return services
         .map(
           (s) => ServiceTile(
@@ -186,7 +187,13 @@ class DeviceScreen extends StatelessWidget {
                       await c.setNotifyValue(!c.isNotifying);
                       c.value.listen((value) {
                         final decoded = utf8.decode(value);
-                        globals.updateGlobal(decoded);
+                        if(decoded != oldValue){
+                          oldValue = decoded;
+                          Timer(Duration(milliseconds: 5), (){
+                            globals.updateGlobal(decoded);
+                          });
+                        }
+
                         print(decoded);
                       });
                       await c.read();
@@ -293,7 +300,7 @@ class DeviceScreen extends StatelessWidget {
                 subtitle: Text('${snapshot.data} bytes'),
                 trailing: IconButton(
                   icon: Icon(Icons.edit),
-                  onPressed: () => device.requestMtu(223),
+                  onPressed: () => device.requestMtu(20),
                 ),
               ),
             ),

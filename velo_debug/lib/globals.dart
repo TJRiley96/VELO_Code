@@ -7,6 +7,8 @@ import 'package:path_provider/path_provider.dart';
 
 List<String> _receivedData = <String>[];
 List<String> _formatted = <String>[];
+String _finalData = "";
+String _oldData = "";
 
 
 void updateGlobal(String input) {
@@ -14,7 +16,7 @@ void updateGlobal(String input) {
   for (int i = 1; i < temp.length; i++) {
     _receivedData.add(temp[i]);
   }
-  if (temp[0] == "1:") {
+  if (temp[0] == "FIN:") {
     _writeData();
   }
 }
@@ -33,6 +35,25 @@ Future<void> _writeData() async {
   _formatted = _receivedData;
   print('File Updated!');
   print(_formatted.join(',').toString());
-  await _myFile.writeAsString(_formatted.join(',').toString(), mode: FileMode.append, encoding: utf8);
+  String _output = _formatted.join(',').toString() + "\n";
+  _finalData = _formatted.join(',').toString();
+  await _myFile.writeAsString( _output, mode: FileMode.append, encoding: utf8);
+  _formatted.clear();
   _receivedData.clear();
+}
+List<String> parseData(String data){
+  List<String> parsed;
+  parsed = data.split(',');
+  return parsed;
+}
+
+String getStringData(){
+
+  if(_finalData == "" || _finalData.split(',').length < 6){
+    return _oldData;
+  }else{
+    _oldData = _finalData;
+
+    return _finalData;
+  }
 }

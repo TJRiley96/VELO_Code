@@ -2,45 +2,49 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BNO055.h>
 #include <utility/imumaths.h>
+
+#include <HardwareSerial.h>
+
 #include <BLEDevice.h>
 #include <BLEServer.h>
 #include <BLEUtils.h>
 #include <BLE2902.h>
 
 /* Set the delay between fresh samples */
-#define BNO055_SAMPLERATE_DELAY_MS (1000)
-Adafruit_BNO055 bno1 = Adafruit_BNO055(1, 0x28);
+uint16_t BNO055_SAMPLERATE_DELAY_MS = 50;
+Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28);
+double v0 = 0;
+double delt = BNO055_SAMPLERATE_DELAY_MS / 1000;
+double v; 
+
+/* Pinout */
+#define RXD2 27 //GRAY WIRE
+#define TXD2 33 //WHITE WIRE
 const int pairingButton = 4;
 const int LED_PWR = 14;
 const int LED1 = 21;
 const int LED2 = 32;
+
+/* Bluetooth Constants */
+#define SERVICE_UUID        "dda0643c-034e-4a75-ae4a-eb81af5db2b7"
+#define CHARACTERISTIC_UUID "dda0643c-034e-4a75-ae4a-eb81af5db2b7"
 BLECharacteristic *pCharacteristic;
 BLEServer *pServerAlias;
 bool isConnected = false;
 int txValue =  0;
-String txArrStr[7];
 bool pairingInterrupt = false;
 
-#define SERVICE_UUID        "dda0643c-034e-4a75-ae4a-eb81af5db2b7"
-#define CHARACTERISTIC_UUID "dda0643c-034e-4a75-ae4a-eb81af5db2b7"
-
-#define RXD2 27 //GRAY WIRE
-#define TXD2 33 //WHITE WIRE
 
 #define AX_ANALOG_VAL 4095
 #define BAT_VOLTAGE 3.7
 
+//int s;
+//int v;
+//int v0;
+//int a;
+//int t;
 
-#include <HardwareSerial.h>
-#define RXD2 33
-#define TXD2 27
-
-int s;
-int v;
-int v0;
-int a;
-int t;
-
+/* Connection Callback */
 class MyServerCallbacks: public BLEServerCallbacks {
     void onConnect(BLEServer *pServer) {
       isConnected = true;
@@ -53,6 +57,7 @@ class MyServerCallbacks: public BLEServerCallbacks {
     };
 };
 
+/* Bluetooth Read Callback */
 class MyCallbacks: public BLECharacteristicCallbacks {
     void onWrite(BLECharacteristic *pCharacteristic) {
       std::string rxValue = pCharacteristic->getValue();
@@ -77,10 +82,14 @@ class MyCallbacks: public BLECharacteristicCallbacks {
       }
     }
 };
-void pairingISR(){
-    Serial.println("INTERUPPT: BUTTON PUSH");
-    pairingInterrupt = true;
+
+/* Pairing Interrupt */
+void pairingISR() {
+  Serial.println("INTERUPPT: BUTTON PUSH");
+  pairingInterrupt = true;
 }
+
+
 void setup() {
   pinMode(pairingButton, INPUT);
   attachInterrupt(digitalPinToInterrupt(pairingButton), pairingISR, FALLING);
@@ -93,7 +102,7 @@ void setup() {
   Serial.println("Orientation Sensor Raw Data Test"); Serial.println("");
 
   /* Initialise the sensor */
-  if (!bno1.begin())
+  if (!bno.begin())
   {
     /* There was a problem detecting the BNO055 ... check your connections */
     Serial.print("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
@@ -104,21 +113,21 @@ void setup() {
   delay(1000);
 
   /* Display the current temperature */
-  int8_t temp1 = bno1.getTemp();
+  int8_t temp1 = bno.getTemp();
   Serial.print("Current Temperature: ");
   Serial.print(temp1);
   Serial.println(" C");
   Serial.println("");
 
-  bno1.setExtCrystalUse(true);
+  //bno1.setExtCrystalUse(true);
 
   Serial.println("Calibration status values: 0=uncalibrated, 3=fully calibrated");
 
   Serial2.write("CD=1\r");
-  delay(100);
+  delay(1);
   Serial2.write("CP=0\r");
+  Serial.println("Setup complete");
   delay(1000);
-  Serial.println("Written");
 
   pairingInterrupt = false;
   //Create the BLE Device
@@ -154,7 +163,7 @@ void setup() {
   //Start advertising
   pServer->getAdvertising()->start();
   Serial.println("Waiting for client connection to notify...");
-
+  
 }
 
 void loop() {
@@ -163,90 +172,106 @@ void loop() {
     Serial.println("Waiting for client reconnection to notify...");
     pairingInterrupt = false;
   }
+  sensors_event_t orientationData , angVelocityData , linearAccelData, magnetometerData;
+  bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER);
+  bno.getEvent(&linearAccelData, Adafruit_BNO055::VECTOR_LINEARACCEL);
   if (isConnected) {
     // Possible vector values can be:
-  // - VECTOR_ACCELEROMETER - m/s^2
-  // - VECTOR_MAGNETOMETER  - uT
-  // - VECTOR_GYROSCOPE     - rad/s
-  // - VECTOR_EULER         - degrees
-  // - VECTOR_LINEARACCEL   - m/s^2
-  // - VECTOR_GRAVITY       - m/s^2
-  imu::Vector<3> euler1 = bno1.getVector(Adafruit_BNO055::VECTOR_EULER);
+    // - VECTOR_ACCELEROMETER - m/s^2
+    // - VECTOR_MAGNETOMETER  - uT
+    // - VECTOR_GYROSCOPE     - rad/s
+    // - VECTOR_EULER         - degrees
+    // - VECTOR_LINEARACCEL   - m/s^2
+    // - VECTOR_GRAVITY       - m/s^2
+    //imu::Vector<3> euler1 = bno1.getVector(Adafruit_BNO055::VECTOR_EULER);
 
-  /* Display the floating point data */
-  Serial.print("BNO1:");
-  Serial.print("\t");
-  Serial.print("X: ");
-  Serial.print("\t");
-  Serial.print(euler1.x());
-  Serial.print("\t");
-  Serial.print(" Y: ");
-  Serial.print("\t");
-  Serial.print(euler1.y());
-  Serial.print("\t");
-  Serial.print(" Z: ");
-  Serial.print("\t");
-  Serial.print(euler1.z());
-  Serial.print("\t\t");
-  Serial.print("\n");
+    /* Display the floating point data */
 
+    /* Reading Voltage and formatting Battery % */
     int rawValue = analogRead(A13);
-    float voltageLevel = (rawValue / 4095.0) * 2 * 1.1 * 3.3; // calculate voltage level
-    float batteryFraction = (voltageLevel - 3.0) / 1.03 ;
+    float voltageLevel = (rawValue / 4095.0) * 2 * 1.1 * 3.3 - 0.2; // calculate voltage level
+    float batteryFraction = (voltageLevel - 3.0) / 1.2 ;
+    float z = orientationData.orientation.z;
+    if (z < 0.5 & z > -0.5){
+      z = 0; 
+    }
 
-    Serial.println((String)"Raw:" + rawValue + " Voltage:" + voltageLevel + "V Percent: " + (batteryFraction * 100));
-    float txArr[7];
-    //txValue =  random(-10, 20);
-    txArr[0] = millis() / 1000;
-    txArr[1] = voltageLevel;
-    txArr[2] = batteryFraction * 100;
-    //txArr[3] = random(-300, 500);
-    //txArr[4] = random(-300, 500);
-    //txArr[5] = random(-300, 500);
-    //        txArr[6] = 4;
+    //Serial.println((String)"Raw:" + rawValue + " Voltage:" + voltageLevel + "V Percent: " + (batteryFraction * 100));
+    float sendData[7];
+    sendData[0] = millis() / 1000.0;
+    sendData[1] = 4.0;
+    sendData[2] = 100.0;
+    sendData[3] = linearAccelData.acceleration.x;
+    sendData[4] = linearAccelData.acceleration.y;
+    sendData[5] = linearAccelData.acceleration.z;
+    sendData[6] = z;
+    for (int i = 0; i < 7; i++) {
+      Serial.print(sendData[i]);
+      Serial.print(", ");
+    }
     String tempString;
     char txString[8];
     char txData[128];
-    /*for(int j = 0; j < 7; j++){
-        dtostrf(txArr[j], 1, 2, txString);
-        tempString += String(txString);
-        if(j <= 5){
-            tempString += ", ";
-        }
-      }*/
+
+    // Time & Voltage
     tempString = "0:,";
-    dtostrf(txArr[0], 1, 2, txString);
-    tempString = tempString + String(txString) + "s,";
+    dtostrf(sendData[0], 1, 2, txString);
+    tempString = tempString + String(txString);
 
-    dtostrf(txArr[1], 1, 2, txString);
-    tempString = tempString + String(txString) + "V,";
-
-    dtostrf(txArr[2], 1, 2, txString);
-    tempString = tempString + String(txString) + "%";
-
-    //        Serial2.write(0xFF);
-    //        String tmp = Serial2.readString();
+    dtostrf(sendData[1], 1, 2, txString);
+    tempString = tempString + ',' + String(txString);
 
     tempString.toCharArray(txData, 128);
-    //        pCharacteristic -> setValue(txData);
-    //        pCharacteristic->notify();
+    pCharacteristic -> setValue(txData);
+    pCharacteristic->notify();
 
-    delay(100);
     Serial.println("Data Sent\n=================");
     Serial.println(txData);
 
-    tempString = "1:,";
-    //tempString = tempString + tmp;
+
+    //Battery & X-Accel
+    tempString = "1:";
+    dtostrf(sendData[2], 1, 2, txString);
+    tempString = tempString + ',' + String(txString);
+    tempString = tempString + "," + sendData[3];
     tempString.toCharArray(txData, 128);
+    pCharacteristic -> setValue(txData);
+    pCharacteristic->notify();
     Serial.println(txData);
 
-    //        //Setting the value to the characteristic
-    //        pCharacteristic -> setValue(txData);
-    //
-    //        //Notifying the connected the client
-    //        pCharacteristic->notify();
+    //Y & Z Accel
+    tempString = "2:";
+    tempString = tempString + "," + sendData[4];
+    tempString = tempString + "," + sendData[5];
+    tempString.toCharArray(txData, 128);
+    pCharacteristic -> setValue(txData);
+    pCharacteristic->notify();
+    Serial.println(txData);
 
-    delay(900);
+    tempString = "FIN:";
+    tempString = tempString + "," + sendData[6];
+    tempString.toCharArray(txData, 128);
+    pCharacteristic -> setValue(txData);
+    pCharacteristic->notify();
+    Serial.println(txData);
+    
+    uint8_t system, gyro, accel, mag = 0;
+    bno.getCalibration(&system, &gyro, &accel, &mag);
+
+//    tempString = "FIN:";
+//    Serial2.write(0xFF);
+//    String tmp = Serial2.readString();
+//    tempString = tempString + "," + tmp;
+//    tempString.toCharArray(txData, 128);
+//    Serial.println(txData);
+//
+//    //Setting the value to the characteristic
+//    pCharacteristic -> setValue(txData);
+//
+//    //Notifying the connected the client
+//    pCharacteristic->notify();
+
+    delay(BNO055_SAMPLERATE_DELAY_MS);
   }
 
 }

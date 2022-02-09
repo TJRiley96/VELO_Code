@@ -4,7 +4,7 @@ class BottomNavBar extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     return BottomAppBar(
-      color: Colors.black87,
+      color: Theme.of(context).primaryColor,
         child: IconTheme(
           data: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
         child: Row(

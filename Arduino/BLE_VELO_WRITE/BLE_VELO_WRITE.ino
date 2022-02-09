@@ -18,8 +18,8 @@ bool pairingInterrupt = false;
 #define SERVICE_UUID        "dda0643c-034e-4a75-ae4a-eb81af5db2b7"
 #define CHARACTERISTIC_UUID "dda0643c-034e-4a75-ae4a-eb81af5db2b7"
 
-#define RXD2 27 //GRAY WIRE
-#define TXD2 33 //WHITE WIRE
+#define RXD2 33 //GRAY WIRE
+#define TXD2 27 //WHITE WIRE
 
 #define AX_ANALOG_VAL 4095
 #define BAT_VOLTAGE 3.7
@@ -78,7 +78,6 @@ void setup(){
     pairingInterrupt = false;
     //Create the BLE Device
     BLEDevice::init("ESP32_VELO_2");
-
 
     //Create BLE Server
     BLEServer *pServer = BLEDevice::createServer();
@@ -166,7 +165,6 @@ void loop(){
         pCharacteristic -> setValue(txData);
         pCharacteristic->notify();
 
-        delay(1000);
         Serial.println("Data Sent\n=================");
         Serial.println(txData);
 
@@ -181,7 +179,7 @@ void loop(){
         //Notifying the connected the client
         pCharacteristic->notify();
         
-        delay(1000);
+        
     }
   
 }

@@ -5,6 +5,9 @@ import 'package:velo_debug/screens/bluetooth/ble_build.dart';
 import 'package:velo_debug/screens/settings/settings_screen.dart';
 import 'package:velo_debug/screens/sign_in/sign_in_screen.dart';
 import 'package:velo_debug/screens/homepage/homepage.dart';
+import 'package:velo_debug/screens/stream_chart.dart';
+import 'package:velo_debug/screens/stream_chart2.dart';
+import 'package:velo_debug/screens/stream_screen.dart';
 import 'package:velo_debug/screens/test_screen.dart';
 
 
@@ -24,6 +27,12 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => BluetoothScreen());
       case '/test':
         return MaterialPageRoute(builder: (_) => TestScreen());
+      case '/stream':
+        return MaterialPageRoute(builder: (_) => StreamScreen());
+      case '/chart':
+        return MaterialPageRoute(builder: (_) => StreamChart());
+      case '/chart2':
+        return MaterialPageRoute(builder: (_) => StreamChartAgain());
         // If args is not of the correct type, return an error page.
         // You can also throw an exception while in development.
       default:

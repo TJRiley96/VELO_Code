@@ -5,6 +5,9 @@ class SettingsScreen extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Setting"),
+      ),
       bottomNavigationBar: BottomNavBar(),
       body: _buildContent(context),
     );
@@ -31,7 +34,9 @@ class SettingsScreen extends StatelessWidget{
               ),
           ),
           ElevatedButton(
-              onPressed: (){},
+              onPressed: (){
+                Navigator.of(context).pushNamed('/stream');
+              },
               child: Text("Colorblind Mode"),
           ),
           ElevatedButton(
@@ -39,6 +44,18 @@ class SettingsScreen extends StatelessWidget{
                 Navigator.of(context).pushNamed('/test');
               },
               child: Text("Test Screen"),
+          ),
+          ElevatedButton(
+            onPressed: (){
+              Navigator.of(context).pushNamed('/chart');
+            },
+            child: Text("Chart Screen"),
+          ),
+          ElevatedButton(
+            onPressed: (){
+              Navigator.of(context).pushNamed('/chart2');
+            },
+            child: Text("Chart Screen 2"),
           ),
         ],
       ),
