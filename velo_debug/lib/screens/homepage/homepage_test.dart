@@ -15,7 +15,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildContent(BuildContext context) {
+  Widget _buildContent(context) {
     var sizeConfig = SizeConfig(context);
     return SingleChildScrollView(
       child: Padding(
@@ -26,13 +26,13 @@ class HomePage extends StatelessWidget {
           children: [
             //TODO: User Name Display
             DisplayUsername(),
-            SizedBox(height: sizeConfig.safeBlockVertical * 2.0,),
+            SizedBox(height: 1,),
             //TODO: History Tab
             HistoryTab(),
-            SizedBox(height: sizeConfig.safeBlockVertical * 2.0,),
+            SizedBox(height: 20.0,),
             //TODO: Day of the Week
             WeekTab(),
-            SizedBox(height: sizeConfig.safeBlockVertical * 1.0,),
+            SizedBox(height: 10.0,),
 
             //TODO: Graph Container
             GraphContainer(),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:velo_debug/components/size_config.dart';
 
 class HistoryTab extends StatelessWidget {
   Widget build(BuildContext context) {
@@ -8,13 +9,14 @@ class HistoryTab extends StatelessWidget {
   }
 
   Widget _buildContent(context) {
+    var sizeConfig = SizeConfig(context);
     return Container(
       decoration: BoxDecoration(
           color: Colors.orangeAccent,
       ),
 
       child: SizedBox(
-        height: 40.0,
+        height: sizeConfig.safeBlockVertical * 5.0,
         child: Text(
           "Imagine A Really Nice Box Here!",
           textAlign: TextAlign.center,

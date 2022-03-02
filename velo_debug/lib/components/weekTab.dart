@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:velo_debug/components/size_config.dart';
 
 class WeekTab extends StatelessWidget {
   Widget build(BuildContext context) {
@@ -8,12 +9,13 @@ class WeekTab extends StatelessWidget {
   }
 
   Widget _buildContent(context) {
+    var sizeConfig = SizeConfig(context);
     return Container(
       decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
           borderRadius: BorderRadius.all(Radius.circular(12))),
       child: SizedBox(
-        height: 90.0,
+        height: sizeConfig.safeBlockVertical * 13.0,
         child: Column(
           children: <Widget>[
             Text(
@@ -21,7 +23,7 @@ class WeekTab extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'Futura',
-                fontSize: 30.0,
+                fontSize: sizeConfig.safeBlockVertical * 4.0,
               ),
             ),
             Row(
@@ -39,27 +41,27 @@ class WeekTab extends StatelessWidget {
                 IconButton(
                   tooltip: 'Tuesday',
                   onPressed: (){},
-                  icon: const Icon(Icons.circle,),
+                  icon: const Icon(Icons.check_box_outline_blank,),
                 ),
                 IconButton(
                   tooltip: 'Wednesday',
                   onPressed: (){},
-                  icon: const Icon(Icons.circle,),
+                  icon: const Icon(Icons.check_box_outline_blank,),
                 ),
                 IconButton(
                   tooltip: 'Thursday',
                   onPressed: (){},
-                  icon: const Icon(Icons.circle,),
+                  icon: const Icon(Icons.check_box_outline_blank,),
                 ),
                 IconButton(
                   tooltip: 'Friday',
                   onPressed: (){},
-                  icon: const Icon(Icons.circle,),
+                  icon: const Icon(Icons.check_box_outline_blank,),
                 ),
                 IconButton(
                   tooltip: 'Saturday',
                   onPressed: (){},
-                  icon: const Icon(Icons.circle,),
+                  icon: const Icon(Icons.check_box_outline_blank,),
                 ),
               ],
             ),

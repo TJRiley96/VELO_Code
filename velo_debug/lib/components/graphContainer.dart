@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:velo_debug/components/line_titles.dart';
+import 'package:velo_debug/components/size_config.dart';
 
 class GraphContainer extends StatelessWidget {
   Widget build(BuildContext context) {
@@ -51,12 +52,13 @@ class GraphContainer extends StatelessWidget {
   }
 
   Widget _buildContent(context) {
+    var sizeConfig = SizeConfig(context);
     return Container(
       decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
           borderRadius: BorderRadius.all(Radius.circular(20))),
       child: SizedBox(
-        height: 500,
+        height: sizeConfig.safeBlockVertical * 65.0,
         child: _buildGraph(context),
       ),
     );

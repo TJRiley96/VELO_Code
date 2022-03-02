@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:velo_debug/components/size_config.dart';
 
 class DisplayUsername extends StatelessWidget {
   Widget build(BuildContext context) {
+
     return Container(
       child: _buildContent(context),
     );
   }
 
   Widget _buildContent(context) {
+    var sizeConfig = SizeConfig(context);
     return Container(
       decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
@@ -15,12 +18,12 @@ class DisplayUsername extends StatelessWidget {
       ),
 
       child: SizedBox(
-        height: 40.0,
+        height: sizeConfig.safeBlockVertical * 5,
         child: Text(
           "Hi, John!",
           textAlign: TextAlign.left,
           style: TextStyle(
-            fontSize: 40.0,
+            fontSize: sizeConfig.safeBlockVertical * 4.0,
             fontWeight: FontWeight.bold,
           ),
         ),
