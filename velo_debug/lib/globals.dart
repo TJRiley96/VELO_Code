@@ -10,6 +10,8 @@ List<String> _formatted = <String>[];
 String _finalData = "";
 String _oldData = "";
 
+const List<List<int>> ColorSchemeData = [[0xFFFFE8D6, 0xFF15232B, 0xFFFF4D19],[0xFFF5F4DA, 0xFF1B1B29, 0xFFB1B025]];
+
 
 void updateGlobal(String input) {
   List<String> temp = input.split(',');

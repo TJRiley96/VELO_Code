@@ -20,6 +20,9 @@ class SettingsScreen extends StatelessWidget{
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Theme.of(context).accentColor)
+            ),
               onPressed: (){
                 Navigator.of(context).pushNamed('/bluetooth');
               },
@@ -34,24 +37,36 @@ class SettingsScreen extends StatelessWidget{
               ),
           ),
           ElevatedButton(
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Theme.of(context).accentColor)
+            ),
               onPressed: (){
                 Navigator.of(context).pushNamed('/stream');
               },
               child: Text("Colorblind Mode"),
           ),
           ElevatedButton(
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Theme.of(context).accentColor)
+            ),
               onPressed: (){
                 Navigator.of(context).pushNamed('/test');
               },
               child: Text("Test Screen"),
           ),
           ElevatedButton(
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Theme.of(context).accentColor)
+            ),
             onPressed: (){
               Navigator.of(context).pushNamed('/chart');
             },
             child: Text("Chart Screen"),
           ),
           ElevatedButton(
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Theme.of(context).accentColor)
+            ),
             onPressed: (){
               Navigator.of(context).pushNamed('/chart2');
             },

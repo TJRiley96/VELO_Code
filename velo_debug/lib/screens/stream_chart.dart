@@ -2,6 +2,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:velo_debug/components/line_titles.dart';
 import 'package:velo_debug/globals.dart' as globals;
+
+
 class StreamChart extends StatelessWidget {
   //final String initData = "";
   double _count = 0;
@@ -120,6 +122,7 @@ class StreamChart extends StatelessWidget {
     _count++;
     return LineChart(
       LineChartData(
+          backgroundColor: Theme.of(context).primaryColor,
           minX: 0,
           minY: -2,
           maxX: double.parse(data[0]),
