@@ -25,6 +25,7 @@ dependencies:
   flutter:
     sdk: flutter
   fl_chart: ^0.40.2
+  animated_splash_screen: ^1.2.0
 
   path_provider:
 

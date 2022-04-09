@@ -6,6 +6,7 @@ class SignInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: Text("VELO Debug"),
         elevation: 0.0,
@@ -17,7 +18,7 @@ class SignInScreen extends StatelessWidget {
 
   Widget _buildContent(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: Theme.of(context).backgroundColor,
       padding: EdgeInsets.all(16.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -27,6 +28,7 @@ class SignInScreen extends StatelessWidget {
             "Sign In",
             textAlign: TextAlign.center,
             style: TextStyle(
+              color: Theme.of(context).primaryColor,
               fontWeight: FontWeight.bold,
               fontSize: 32.0,
             ),
@@ -50,6 +52,7 @@ class SignInScreen extends StatelessWidget {
             "or",
             textAlign: TextAlign.center,
             style: TextStyle(
+              color: Theme.of(context).primaryColor,
               fontWeight: FontWeight.bold,
               fontSize: 20.0,
             ),

@@ -5,6 +5,7 @@ import 'package:velo_debug/screens/bluetooth/ble_build.dart';
 import 'package:velo_debug/screens/settings/settings_screen.dart';
 import 'package:velo_debug/screens/sign_in/sign_in_screen.dart';
 import 'package:velo_debug/screens/homepage/homepage.dart';
+import 'package:velo_debug/screens/splash_screen.dart';
 import 'package:velo_debug/screens/stream_chart.dart';
 import 'package:velo_debug/screens/stream_chart2.dart';
 import 'package:velo_debug/screens/stream_screen.dart';
@@ -18,7 +19,7 @@ class RouteGenerator {
 
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => SignInScreen());
+        return MaterialPageRoute(builder: (_) => SplashScreen());
       case 'home':
         return MaterialPageRoute(builder: (_) => HomePage());
       case '/settings':
