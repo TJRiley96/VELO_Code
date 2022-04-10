@@ -17,14 +17,15 @@ class BottomNavBar extends StatelessWidget{
             IconButton(
                 tooltip: 'Timer',
                 onPressed: (){},
-                icon: const Image(image: AssetImage('assets/icons/icon_timer.png'),)),
+                icon: Image.asset('assets/icons/icon_timer.png', scale: 1.5,)
+            ),
             IconButton(
               tooltip: 'VELO Icon',
               onPressed: (){
                 Navigator.of(context).pushNamed('home');
               },
               //icon: const Icon(Icons.circle)),
-              icon: const Image(image: AssetImage('assets/icons/icon_velo.png'),)),
+              icon: const Image(image: AssetImage('assets/icons/icon_velo_dark.png'),)),
             IconButton(
                 tooltip: 'Setting Menu',
                 onPressed: (){

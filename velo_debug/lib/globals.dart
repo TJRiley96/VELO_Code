@@ -7,11 +7,15 @@ import 'package:path_provider/path_provider.dart';
 
 List<String> _receivedData = <String>[];
 List<String> _formatted = <String>[];
+int _color = 0;
 String _finalData = "";
 String _oldData = "";
 
 const List<List<int>> ColorSchemeData = [[0xFFFFE8D6, 0xFF15232B, 0xFFFF4D19],[0xFFF5F4DA, 0xFF1B1B29, 0xFFB1B025]];
 
+void initializeGlobals(){
+  _readColor();
+}
 
 void updateGlobal(String input) {
   List<String> temp = input.split(',');
@@ -22,8 +26,27 @@ void updateGlobal(String input) {
     _writeData();
   }
 }
+Future<void> writeColor(int colorNum){
+  final _path  = _getDirPath();
+  final _myFile = File('$_path/color.txt');
+  return _myFile.writeAsString('$colorNum');
+}
 
+Future<void> _readColor() async{
+  final _path  = _getDirPath();
+  if(File('$_path/color.txt').existsSync()){
+    final _myFile = File('$_path/color.txt');
+    final contents = await _myFile.readAsString();
+    _color = int.parse(contents);
+  }else{
+    final _myFile = File('$_path/color.txt');
+    _myFile.writeAsString('0');
+    _color = 0;
+  }
+
+}
 Future<List<String>> getData() async{return _formatted;}
+Future<int> getColor() async => _color;
 Future<String> _getDirPath() async {
   final _dir = await getApplicationDocumentsDirectory();
   return _dir.path;

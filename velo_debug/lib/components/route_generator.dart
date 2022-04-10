@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:velo_debug/main.dart';
 import 'package:velo_debug/screens/bluetooth/ble_build.dart';
+import 'package:velo_debug/screens/settings/color_screen.dart';
 import 'package:velo_debug/screens/settings/settings_screen.dart';
 import 'package:velo_debug/screens/sign_in/sign_in_screen.dart';
 import 'package:velo_debug/screens/homepage/homepage.dart';
@@ -24,6 +25,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => HomePage());
       case '/settings':
         return MaterialPageRoute(builder: (_) => SettingsScreen());
+      case '/settings/color':
+        return MaterialPageRoute(builder: (_) => ColorSetScreen());
       case '/bluetooth':
         return MaterialPageRoute(builder: (_) => BluetoothScreen());
       case '/test':
