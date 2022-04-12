@@ -27,7 +27,7 @@ const int LED2 = 32;
 
 /* Bluetooth Constants */
 #define SERVICE_UUID        "dda0643c-034e-4a75-ae4a-eb81af5db2b7"
-#define CHARACTERISTIC_UUID "dda0643c-034e-4a75-ae4a-eb81af5db2b7"
+#define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
 BLECharacteristic *pCharacteristic;
 BLEServer *pServerAlias;
 bool isConnected = false;
