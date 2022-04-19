@@ -12,6 +12,8 @@ import 'dart:math';
 import "package:velo_debug/components/write_file.dart";
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:velo_debug/screens/bluetooth/device_control.dart';
+import 'package:velo_debug/screens/bluetooth/test2.dart';
 import 'package:velo_debug/screens/bluetooth/widgets.dart';
 
 
@@ -99,7 +101,7 @@ class FindDevicesScreen extends StatelessWidget {
                                     onPressed: () => Navigator.of(context).push(
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                DeviceScreen(device: d,))),
+                                                DeviceTest2(device: d,))),
                                   );
                                 }
                                 return Text(snapshot.data.toString());
@@ -120,7 +122,7 @@ class FindDevicesScreen extends StatelessWidget {
                           onTap: () => Navigator.of(context)
                               .push(MaterialPageRoute(builder: (context) {
                             r.device.connect();
-                            return DeviceScreen(device: r.device);
+                            return DeviceTest2(device: r.device);
                           })),
                         ),
                       )

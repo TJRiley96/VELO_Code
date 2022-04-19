@@ -1,4 +1,4 @@
-import 'package:fl_chart/fl_chart.dart';
+ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:velo_debug/components/line_titles.dart';
 import 'package:velo_debug/globals.dart' as globals;
