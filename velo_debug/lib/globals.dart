@@ -3,6 +3,7 @@ library velo_debug.globals;
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter_blue/flutter_blue.dart';
 import 'package:path_provider/path_provider.dart';
 
 List<String> _receivedData = <String>[];
@@ -10,7 +11,11 @@ List<String> _formatted = <String>[];
 String _finalData = "";
 String _oldData = "";
 
+List<BluetoothDevice> devices = [];
 
+void setDevice(BluetoothDevice d) => devices.insert(0, d);
+void deleteDevice() => devices.clear();
+BluetoothDevice getDevice() {return devices.first;}
 void updateGlobal(String input) {
   List<String> temp = input.split(',');
   for (int i = 1; i < temp.length; i++) {

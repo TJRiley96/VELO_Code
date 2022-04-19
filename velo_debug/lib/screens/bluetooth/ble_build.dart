@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
-import 'package:velo_debug/screens/bluetooth/ble_main.dart';
+import 'package:velo_debug/screens/bluetooth/ble_final.dart';
 
 
 class BluetoothScreen extends StatelessWidget {

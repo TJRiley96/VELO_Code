@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:velo_debug/main.dart';
 import 'package:velo_debug/screens/bluetooth/ble_build.dart';
+import 'package:velo_debug/screens/settings/graph_battery.dart';
 import 'package:velo_debug/screens/settings/settings_screen.dart';
 import 'package:velo_debug/screens/sign_in/sign_in_screen.dart';
 import 'package:velo_debug/screens/homepage/homepage.dart';
@@ -33,6 +34,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => StreamChart());
       case '/chart2':
         return MaterialPageRoute(builder: (_) => StreamChartAgain());
+      case '/settings/bat':
+        return MaterialPageRoute(builder: (_) => BatteryGraph());
         // If args is not of the correct type, return an error page.
         // You can also throw an exception while in development.
       default:
