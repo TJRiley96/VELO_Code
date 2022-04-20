@@ -5,7 +5,7 @@
 
 /* Set the delay between fresh samples */
 #define BNO055_SAMPLERATE_DELAY_MS (1000)
-Adafruit_BNO055 bno1 = Adafruit_BNO055(1, 0x28);
+Adafruit_BNO055 bno1 = Adafruit_BNO055(55);
 
 
 #include <HardwareSerial.h>

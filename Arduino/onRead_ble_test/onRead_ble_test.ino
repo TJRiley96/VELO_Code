@@ -22,6 +22,8 @@ const int LED3 = 16;
 #define ORI_CHARACTERISTIC_UUID "68060827-d23a-4479-932c-f074367dc424"
 #define FLEX_CHARACTERISTIC_UUID "db92bf37-ecfd-470f-83ef-0c7985ca2f35"
 
+#define VERBOSE_DEFINE
+
 
 void LED_CONFIG(){
   pinMode(LED1, OUTPUT);
@@ -82,21 +84,23 @@ class MyCallbacks: public BLECharacteristicCallbacks{
     };
 };
 class ReadStats: public MyCallbacks{
-  float txArr0 = random(0.0, 100.0);
-  float txArr1 = random(0.0, 4.5);
-  float txArr2 = random(0.0, 5.0);
-  //ledSwitch(21);
+public:
+  float txArr0, txArr1, txArr2;
 
-  
-  #ifdef VERBOSE_RETURN
-            snprintf(buf, sizeof(buf), "%f,%f,%f", txArr0, txArr1, txArr2);
-            Serial.println(buf);
-            ret.assign(buf);
-  #endif
+  ReadStats(){
+    txArr0 = random(0.0, 100.0);
+    txArr1 = random(0.0, 4.5);
+    txArr2 = random(0.0, 5.0);
+
+    snprintf(buf, sizeof(buf), "%f,%f,%f", txArr0, txArr1, txArr2);
+    Serial.println(buf);
+    ret.assign(buf);
+    }
+  //ledSwitch(21);
   
 };
 class ReadOrientation: public MyCallbacks{
-
+public:
   float txArr0 = random(0.0, 100.0);
   float txArr1 = random(0.0, 4.5);
   float txArr2 = random(0.0, 5.0);
@@ -110,6 +114,7 @@ class ReadOrientation: public MyCallbacks{
   #endif
 };
 class ReadFlex: public MyCallbacks{
+public:
   float tx = random(0, 100);;
   //ledSwitch(LED3);
 
@@ -145,22 +150,22 @@ void setup(){
                                 STATS_CHARACTERISTIC_UUID,
                                 BLECharacteristic::PROPERTY_READ
                                 );
-     pCharacteristic->setCallbacks(new ReadStats);
+     pCharacteristic->setCallbacks(new ReadStats());
      
      pCharacteristic = pService -> createCharacteristic(
                                 ORI_CHARACTERISTIC_UUID,
                                 BLECharacteristic::PROPERTY_READ
                                 );
-     pCharacteristic->setCallbacks(new ReadOrientation);
+     pCharacteristic->setCallbacks(new ReadOrientation());
      
      pCharacteristic = pService -> createCharacteristic(
                                 FLEX_CHARACTERISTIC_UUID,
                                 BLECharacteristic::PROPERTY_READ
                                 );
-     pCharacteristic->setCallbacks(new ReadFlex);
+     pCharacteristic->setCallbacks(new ReadFlex());
 
     //BLE2902 needed to notify
-    pCharacteristic -> addDescriptor(new BLE2902());
+    //pCharacteristic -> addDescriptor(new BLE2902());
 
    /* BLECharacteristic *pCharacteristic =  pService->createCharacteristic(
                                             CHARACTERISTIC_UUID,
