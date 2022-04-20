@@ -21,13 +21,13 @@ double v;
 #define RXD2 27 //GRAY WIRE
 #define TXD2 33 //WHITE WIRE
 const int pairingButton = 4;
-const int LED_PWR = 14;
-const int LED1 = 21;
-const int LED2 = 32;
+const int LED_PWR = 21;
+const int LED1 = 17;
+const int LED2 = 16;
 
 /* Bluetooth Constants */
 #define SERVICE_UUID        "dda0643c-034e-4a75-ae4a-eb81af5db2b7"
-#define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
+#define CHARACTERISTIC_UUID "dda0643c-034e-4a75-ae4a-eb81af5db2b7"
 BLECharacteristic *pCharacteristic;
 BLEServer *pServerAlias;
 bool isConnected = false;
@@ -92,14 +92,15 @@ void pairingISR() {
 
 void setup() {
   pinMode(pairingButton, INPUT);
-  attachInterrupt(digitalPinToInterrupt(pairingButton), pairingISR, FALLING);
+  attachInterrupt(digitalPinToInterrupt(pairingButton), pairingISR, RISING);
   pinMode(LED1, OUTPUT);
   pinMode(LED2, OUTPUT);
   pinMode(LED_PWR, OUTPUT);
   digitalWrite(LED_PWR, HIGH);
 
   Serial.begin(115200);
-  Serial.println("Orientation Sensor Raw Data Test"); Serial.println("");
+  Serial.println("Orientation Sensor Raw Data Test"); 
+  Serial.println("");
 
   /* Initialise the sensor */
   if (!bno.begin())
@@ -119,7 +120,7 @@ void setup() {
   Serial.println(" C");
   Serial.println("");
 
-  //bno1.setExtCrystalUse(true);
+  bno.setExtCrystalUse(true);
 
   Serial.println("Calibration status values: 0=uncalibrated, 3=fully calibrated");
 
