@@ -49,7 +49,7 @@ class SettingsScreen extends StatelessWidget{
             onPressed: (){
               Navigator.of(context).pushNamed('/chart');
             },
-            child: Text("Chart Screen"),
+            child: Text("VELO CHART"),
           ),
           ElevatedButton(
             onPressed: (){

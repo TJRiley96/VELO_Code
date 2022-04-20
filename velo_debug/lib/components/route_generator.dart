@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:velo_debug/main.dart';
 import 'package:velo_debug/screens/bluetooth/ble_build.dart';
 import 'package:velo_debug/screens/settings/graph_battery.dart';
+import 'package:velo_debug/screens/settings/graph_velo.dart';
 import 'package:velo_debug/screens/settings/settings_screen.dart';
 import 'package:velo_debug/screens/sign_in/sign_in_screen.dart';
 import 'package:velo_debug/screens/homepage/homepage.dart';
@@ -31,7 +32,7 @@ class RouteGenerator {
       case '/stream':
         return MaterialPageRoute(builder: (_) => StreamScreen());
       case '/chart':
-        return MaterialPageRoute(builder: (_) => StreamChart());
+        return MaterialPageRoute(builder: (_) => VeloGraph());
       case '/chart2':
         return MaterialPageRoute(builder: (_) => StreamChartAgain());
       case '/settings/bat':
