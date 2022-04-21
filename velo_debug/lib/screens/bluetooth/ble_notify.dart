@@ -5,8 +5,8 @@ import 'dart:convert';
 
 import 'package:flutter_blue/flutter_blue.dart';
 
-class BLEStream{
-  BLEStream({required this.d, this.ms = 75}){
+class BLENotify{
+  BLENotify({required this.d, this.ms = 75}){
     process();
     Timer.periodic(Duration(milliseconds: ms), (t) {
       process();
@@ -25,10 +25,10 @@ class BLEStream{
     List<BluetoothService> services = await d.discoverServices();
     BluetoothService velo = services.last;
     //var value1 = await velo.characteristics[1].read();
-    var value2 = await velo.characteristics[0].read();
-    //var value3 = await velo.characteristics[3].read();
-    //str.insert(0, utf8.decode(value1));
-    str.insert(0, utf8.decode(value2));
+    var c = velo.characteristics[0];
+    c.setNotifyValue(!c.isNotifying);
+    c.value.listen((value) { str.insert(0, utf8.decode(value));});
+
     //str.insert(2, utf8.decode(value3));
     if(len > 8){
       str.removeRange(6, 9);

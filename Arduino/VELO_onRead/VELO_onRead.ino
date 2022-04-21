@@ -84,38 +84,7 @@ class MyServerCallbacks: public BLEServerCallbacks{
         //pairingInterrupt = true;
     };
 };
-class MyCallbacks: public BLECharacteristicCallbacks{
-    public:
-    // A buffer for messages; a C string.
-    char buf[100];
-    // A string holding read data to return to the client.
-    std::string ret;
-    // The value read from a characteristic.
-    std::string value;
 
-    MyCallbacks() : ret(100, 0) {
-        ret.assign("Not yet invoked.");
-    };
-
-    // On a read, return ``buf``.
-    void onRead(BLECharacteristic* pCharacteristic) {
-        pCharacteristic->setValue(ret);
-    };
-
-    // Get a write value and check its length.
-    bool checkLength(size_t sz_expected_length, BLECharacteristic* pCharacteristic) {
-        value = pCharacteristic->getValue();
-        if (value.length() != sz_expected_length) {
-            snprintf(buf, sizeof(buf), "Error: message length was %u, but expected %u.\n", value.length(), sz_expected_length);
-            ret.assign(buf);
-            return false;
-        }
-
-        // The default response is an empty string.
-        ret.clear();
-        return true;
-    };
-};
 class ReadStats: public BLECharacteristicCallbacks{
   public:
   // A buffer for messages; a C string.
@@ -151,14 +120,20 @@ public:
   ReadOrientation(){
     bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER);
     bno.getEvent(&linearAccelData, Adafruit_BNO055::VECTOR_LINEARACCEL);
+    Serial.println(xPortGetCoreID());
     }
     void onRead(BLECharacteristic* pCharacteristic){
+      int timeCnt = millis();
       bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER);
       bno.getEvent(&linearAccelData, Adafruit_BNO055::VECTOR_LINEARACCEL);
       snprintf(buf, sizeof(buf), "%f,%f,%f", linearAccelData.acceleration.x, linearAccelData.acceleration.y, orientationData.orientation.z);
       Serial.println(buf);
+      Serial.println(xPortGetCoreID());
       ret.assign(buf);
       pCharacteristic->setValue(ret);
+      Serial.print("Time: ");
+      Serial.println(millis()-timeCnt);
+      
     }
 
   //ledSwitch(LED2);
@@ -200,14 +175,7 @@ void setup(){
     BLEService *pService = pServer -> createService(SERVICE_UUID);
 
     //Create a BLE Characteristic
-    BLECharacteristic *pCharacteristic = pService -> createCharacteristic(
-                                CHARACTERISTIC_UUID,
-                                BLECharacteristic::PROPERTY_READ|
-                                BLECharacteristic::PROPERTY_WRITE
-                                );
-    pCharacteristic->setCallbacks(new MyCallbacks());
-    
-    pCharacteristic = pService -> createCharacteristic(
+     BLECharacteristic *pCharacteristic = pService -> createCharacteristic(
                                 STATS_CHARACTERISTIC_UUID,
                                 BLECharacteristic::PROPERTY_READ
                                 );
@@ -218,6 +186,8 @@ void setup(){
                                 BLECharacteristic::PROPERTY_READ
                                 );
      pCharacteristic->setCallbacks(new ReadOrientation());
+     //BLE2902 needed to notify
+    pCharacteristic -> addDescriptor(new BLE2902());
      
      pCharacteristic = pService -> createCharacteristic(
                                 FLEX_CHARACTERISTIC_UUID,
@@ -225,21 +195,19 @@ void setup(){
                                 );
      pCharacteristic->setCallbacks(new ReadFlex());
 
-    //BLE2902 needed to notify
-    pCharacteristic -> addDescriptor(new BLE2902());
+    
 
    /* BLECharacteristic *pCharacteristic =  pService->createCharacteristic(
                                             CHARACTERISTIC_UUID,
                                             BLECharacteristic::PROPERTY_WRITE
                                         );*/
-
-    pCharacteristic->setCallbacks(new MyCallbacks());
     
     //Start the service
     pService->start();
 
     //Start advertising
     pServer->getAdvertising()->start();
+    Serial.println(xPortGetCoreID());
     Serial.println("Waiting for client connection to notify...");
 
   

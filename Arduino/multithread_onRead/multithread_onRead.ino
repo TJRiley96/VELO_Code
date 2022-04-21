@@ -10,7 +10,7 @@
 #include <Adafruit_BNO055.h>
 #include <utility/imumaths.h>
 
-
+int timer;
 BLECharacteristic *pCharacteristic;
 BLEServer *pServer = NULL;
 bool isConnected = false;
@@ -18,9 +18,10 @@ int txValue =  0;
 String txArrStr[7];
 bool pairingInterrupt = false;
 
-const int LED1 = 21;
+const int LED3 = 21;
 const int LED2 = 17;
-const int LED3 = 16;
+const int LED1 = 16;
+char static buf_notify[100];
 
 #define SERVICE_UUID        "dda0643c-034e-4a75-ae4a-eb81af5db2b7"
 #define CHARACTERISTIC_UUID "bf5b1cfa-3c99-4869-922c-6c95672b0ad1"
@@ -31,7 +32,7 @@ const int LED3 = 16;
 
 
 /* Set the delay between fresh samples */
-#define BNO055_SAMPLERATE_DELAY_MS (1000)
+#define BNO055_SAMPLERATE_DELAY_MS (50)
 Adafruit_BNO055 bno = Adafruit_BNO055(55);
 
 
@@ -39,18 +40,28 @@ Adafruit_BNO055 bno = Adafruit_BNO055(55);
 sensors_event_t orientationData , angVelocityData , linearAccelData, magnetometerData;
 
 TaskHandle_t Task1;
+TaskHandle_t TaskNotify;
 
 void doTask1(void * pvPrameter){
   for(;;){
-    
-  }
-}
-
- 
-void getSensorValues(){
     bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER);
     bno.getEvent(&linearAccelData, Adafruit_BNO055::VECTOR_LINEARACCEL);
+    snprintf(buf_notify, sizeof(buf_notify), "%f,%f,%f", linearAccelData.acceleration.x, linearAccelData.acceleration.y, orientationData.orientation.z);
+    delay(BNO055_SAMPLERATE_DELAY_MS);  
   }
+}
+void doNotify(void * pvPrameter){
+  for(;;){
+  //Serial.println(xPortGetCoreID());
+  if(isConnected){
+    //ret.assign(buf);
+    pCharacteristic -> setValue(buf_notify);
+    pCharacteristic->notify();
+  }else{
+  delay(1000);
+  }
+  }
+}
 
 void BNO_CONFIG(){
   Serial.println("Orientation Sensor Raw Data Test"); Serial.println("");
@@ -81,8 +92,8 @@ void LED_CONFIG(){
   pinMode(LED2, OUTPUT);
   pinMode(LED3, OUTPUT);
   digitalWrite(LED1, HIGH);
-  digitalWrite(LED2, HIGH);
-  digitalWrite(LED3, HIGH);
+  digitalWrite(LED2, LOW);
+  digitalWrite(LED3, LOW);
   }
 void ledSwitch(int LED){
   bool temp = digitalRead(LED);
@@ -95,43 +106,13 @@ void ledSwitch(int LED){
 
 class MyServerCallbacks: public BLEServerCallbacks{
     void onConnect(BLEServer *pServer){
+        digitalWrite(LED2, HIGH);
         isConnected = true;
     };
     void onDisconnect(BLEServer *pServer){
+        digitalWrite(LED2, LOW);
         isConnected = false;
         //pairingInterrupt = true;
-    };
-};
-class MyCallbacks: public BLECharacteristicCallbacks{
-    public:
-    // A buffer for messages; a C string.
-    char buf[100];
-    // A string holding read data to return to the client.
-    std::string ret;
-    // The value read from a characteristic.
-    std::string value;
-
-    MyCallbacks() : ret(100, 0) {
-        ret.assign("Not yet invoked.");
-    };
-
-    // On a read, return ``buf``.
-    void onRead(BLECharacteristic* pCharacteristic) {
-        pCharacteristic->setValue(ret);
-    };
-
-    // Get a write value and check its length.
-    bool checkLength(size_t sz_expected_length, BLECharacteristic* pCharacteristic) {
-        value = pCharacteristic->getValue();
-        if (value.length() != sz_expected_length) {
-            snprintf(buf, sizeof(buf), "Error: message length was %u, but expected %u.\n", value.length(), sz_expected_length);
-            ret.assign(buf);
-            return false;
-        }
-
-        // The default response is an empty string.
-        ret.clear();
-        return true;
     };
 };
 class ReadStats: public BLECharacteristicCallbacks{
@@ -167,39 +148,44 @@ public:
   
 
   ReadOrientation(){
+    timer = millis();
     
     }
     void onRead(BLECharacteristic* pCharacteristic){
-      bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER);
-      bno.getEvent(&linearAccelData, Adafruit_BNO055::VECTOR_LINEARACCEL);
+      Serial.print("Time since last read: ");
+      Serial.println(millis()-timer);
+      timer = millis();
+      int timeCnt = millis();
       snprintf(buf, sizeof(buf), "%f,%f,%f", linearAccelData.acceleration.x, linearAccelData.acceleration.y, orientationData.orientation.z);
       Serial.println(buf);
       ret.assign(buf);
       pCharacteristic->setValue(ret);
+      Serial.print("Time: ");
+      Serial.println(millis()-timeCnt);
     }
 
   //ledSwitch(LED2);
 
 };
-class ReadFlex: public BLECharacteristicCallbacks{
-  public:
-  // A buffer for messages; a C string.
-    char buf[100];
-    // A string holding read data to return to the client.
-    std::string ret;
-  float tx;
-  ReadFlex(){
-    tx = random(0,100);
-  }
-  //ledSwitch(LED3);
-  void onRead(BLECharacteristic* pCharacteristic){
-    tx = random(0,100);
-    snprintf(buf, sizeof(buf), "%f", tx);
-    Serial.println(buf);
-    ret.assign(buf);
-    pCharacteristic->setValue(ret);
-  }
-};
+//class ReadFlex: public BLECharacteristicCallbacks{
+//  public:
+//  // A buffer for messages; a C string.
+//    char buf[100];
+//    // A string holding read data to return to the client.
+//    std::string ret;
+//  float tx;
+//  ReadFlex(){
+//    tx = random(0,100);
+//  }
+//  //ledSwitch(LED3);
+//  void onRead(BLECharacteristic* pCharacteristic){
+//    tx = random(0,100);
+//    snprintf(buf, sizeof(buf), "%f", tx);
+//    Serial.println(buf);
+//    ret.assign(buf);
+//    pCharacteristic->setValue(ret);
+//  }
+//};
 void setup(){
     Serial.begin(115200);
 
@@ -208,7 +194,8 @@ void setup(){
     BNO_CONFIG();
     //Create the BLE Device
 
-    xTaskCreatePinnedToCore(doTask1,"Task_1",1000, NULL, 1, &Task1, 0);
+    xTaskCreatePinnedToCore(doTask1,"Task_1",20000, NULL, 2, &Task1, 1);
+    xTaskCreatePinnedToCore(doNotify,"Task_Notify",10000, NULL, 1, &TaskNotify, 0);
     BLEDevice::init("ESP32_VELO_2");
 
     //Create BLE Server
@@ -220,11 +207,12 @@ void setup(){
 
     //Create a BLE Characteristic
     BLECharacteristic *pCharacteristic = pService -> createCharacteristic(
-                                CHARACTERISTIC_UUID,
-                                BLECharacteristic::PROPERTY_READ|
-                                BLECharacteristic::PROPERTY_WRITE
+                                ORI_CHARACTERISTIC_UUID,
+                                BLECharacteristic::PROPERTY_READ |
+                                BLECharacteristic::PROPERTY_NOTIFY
                                 );
-    pCharacteristic->setCallbacks(new MyCallbacks());
+     pCharacteristic->setCallbacks(new ReadOrientation());
+     pCharacteristic -> addDescriptor(new BLE2902());
     
     pCharacteristic = pService -> createCharacteristic(
                                 STATS_CHARACTERISTIC_UUID,
@@ -232,28 +220,17 @@ void setup(){
                                 );
      pCharacteristic->setCallbacks(new ReadStats());
      
-     pCharacteristic = pService -> createCharacteristic(
-                                ORI_CHARACTERISTIC_UUID,
-                                BLECharacteristic::PROPERTY_READ
-                                );
-     pCharacteristic->setCallbacks(new ReadOrientation());
      
-     pCharacteristic = pService -> createCharacteristic(
-                                FLEX_CHARACTERISTIC_UUID,
-                                BLECharacteristic::PROPERTY_READ
-                                );
-     pCharacteristic->setCallbacks(new ReadFlex());
+     
+//     pCharacteristic = pService -> createCharacteristic(
+//                                FLEX_CHARACTERISTIC_UUID,
+//                                BLECharacteristic::PROPERTY_READ
+//                                );
+//     pCharacteristic->setCallbacks(new ReadFlex());
+//
+//    //BLE2902 needed to notify
+//    
 
-    //BLE2902 needed to notify
-    pCharacteristic -> addDescriptor(new BLE2902());
-
-   /* BLECharacteristic *pCharacteristic =  pService->createCharacteristic(
-                                            CHARACTERISTIC_UUID,
-                                            BLECharacteristic::PROPERTY_WRITE
-                                        );*/
-
-    pCharacteristic->setCallbacks(new MyCallbacks());
-    
     //Start the service
     pService->start();
 
@@ -265,5 +242,5 @@ void setup(){
 }
 
 void loop(){
-  
+  delay(1);
 }

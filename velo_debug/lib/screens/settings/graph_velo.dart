@@ -2,7 +2,9 @@
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 import 'package:velo_debug/components/line_titles.dart';
+import 'package:velo_debug/screens/bluetooth/ble_notify.dart';
 import 'package:velo_debug/screens/bluetooth/ble_stream.dart';
 
 import 'package:velo_debug/globals.dart' as globals;
@@ -16,6 +18,8 @@ class VeloGraph extends StatefulWidget {
 
 class _VeloGraphState extends State<VeloGraph> {
   double _count = 0;
+  double _maxY = 5;
+  double _minY = 5;
 
   final List<FlSpot> dotList = <FlSpot>[];
 
@@ -32,7 +36,7 @@ class _VeloGraphState extends State<VeloGraph> {
         title: Text("Battery Chart"),
       ),
       body: StreamBuilder<List<String>>(
-        stream: BLEStream(d: globals.getDevice(), ms: 200).stream,
+        stream: BLENotify(d: globals.getDevice()).stream,
         builder: (context, snapshot) {
           if ((snapshot.connectionState == ConnectionState.waiting) || !snapshot.hasData) {
             return CircularProgressIndicator();
@@ -92,6 +96,11 @@ class _VeloGraphState extends State<VeloGraph> {
     if(data1.isNotEmpty) {
       final FlSpot temp1 = FlSpot(_count, double.parse(data1[0]));
       final FlSpot temp2 = FlSpot(_count, double.parse(data1[2]));
+      if(double.parse(data1[2]) > _maxY){
+        _maxY = double.parse(data1[2]);
+      } else if (double.parse(data1[2]) < _minY){
+        _minY = double.parse(data1[2]);
+      }
       _addToList(dotList, temp1);
       _addToList(dotList2, temp2);
     }
