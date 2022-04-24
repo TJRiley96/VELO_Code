@@ -106,9 +106,12 @@ class FindDevicesScreen extends StatelessWidget {
                       .map(
                         (r) => ScanResultTile(
                       result: r,
-                      onTap: () {
+                      onTap: () async {
                         r.device.connect();
                         globals.setDevice(r.device);
+                        final mtu = await r.device.mtu.first;
+                        print(mtu);
+                        await r.device.requestMtu(512);
                       },
                     ),
                   )

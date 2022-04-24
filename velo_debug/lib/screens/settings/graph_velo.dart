@@ -2,7 +2,6 @@
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_blue/flutter_blue.dart';
 import 'package:velo_debug/components/line_titles.dart';
 import 'package:velo_debug/screens/bluetooth/ble_notify.dart';
 import 'package:velo_debug/screens/bluetooth/ble_stream.dart';
@@ -95,7 +94,7 @@ class _VeloGraphState extends State<VeloGraph> {
     final List<String> data1 = globals.parseData(data[0]);
     if(data1.isNotEmpty) {
       final FlSpot temp1 = FlSpot(_count, double.parse(data1[0]));
-      final FlSpot temp2 = FlSpot(_count, double.parse(data1[2]));
+      final FlSpot temp2 = FlSpot(_count, double.parse(data1[1]));
       if(double.parse(data1[2]) > _maxY){
         _maxY = double.parse(data1[2]);
       } else if (double.parse(data1[2]) < _minY){

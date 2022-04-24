@@ -32,6 +32,7 @@ class BLEStream{
     //str.insert(2, utf8.decode(value3));
     if(len > 8){
       str.removeRange(6, 9);
+      print("Items Remove");
     }
 
 

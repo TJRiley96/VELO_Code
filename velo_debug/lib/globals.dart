@@ -15,6 +15,16 @@ List<BluetoothDevice> devices = [];
 
 void setDevice(BluetoothDevice d) => devices.insert(0, d);
 void deleteDevice() => devices.clear();
+
+bool isConnected(){
+  print("Device State: ${devices[0].state}      ==================================================");
+  if(devices[0].state == BluetoothDeviceState.connected){
+    return true;
+  } else{
+    deleteDevice();
+    return false;
+  }
+}
 BluetoothDevice getDevice() {return devices.first;}
 void updateGlobal(String input) {
   List<String> temp = input.split(',');
