@@ -10,8 +10,14 @@ List<String> _receivedData = <String>[];
 List<String> _formatted = <String>[];
 String _finalData = "";
 String _oldData = "";
+const List<List<int>> ColorSchemeData = [[0xFFFFE8D6, 0xFF15232B, 0xFFFF4D19],[0xFFF5F4DA, 0xFF1B1B29, 0xFFB1B025]];
+int _color = 0;
 
 List<BluetoothDevice> devices = [];
+
+void initializeGlobals(){
+  _readColor();
+}
 
 void setDevice(BluetoothDevice d) => devices.insert(0, d);
 void deleteDevice() => devices.clear();
@@ -36,6 +42,26 @@ void updateGlobal(String input) {
   }
 }
 
+Future<void> writeColor(int colorNum){
+  final _path  = _getDirPath();
+  final _myFile = File('$_path/color.txt');
+  return _myFile.writeAsString('$colorNum');
+}
+
+Future<void> _readColor() async{
+  final _path  = _getDirPath();
+  if(File('$_path/color.txt').existsSync()){
+    final _myFile = File('$_path/color.txt');
+    final contents = await _myFile.readAsString();
+    _color = int.parse(contents);
+  }else{
+    final _myFile = File('$_path/color.txt');
+    _myFile.writeAsString('0');
+    _color = 0;
+  }
+
+}
+Future<int> getColor() async => _color;
 Future<List<String>> getData() async{return _formatted;}
 Future<String> _getDirPath() async {
   final _dir = await getApplicationDocumentsDirectory();
