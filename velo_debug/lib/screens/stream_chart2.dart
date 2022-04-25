@@ -152,6 +152,7 @@ class StreamChartAgain extends StatelessWidget {
     _count++;
     return LineChart(
       LineChartData(
+          backgroundColor: Theme.of(context).primaryColor,
           minX: _count - 60,
           minY: -30,
           maxX: _count,

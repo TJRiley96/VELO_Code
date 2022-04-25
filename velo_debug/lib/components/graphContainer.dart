@@ -13,6 +13,7 @@ class GraphContainer extends StatelessWidget {
   Widget _buildGraph(context) {
     return LineChart(
       LineChartData(
+        backgroundColor: Theme.of(context).primaryColor,
           minX: 0,
           minY: 0,
           maxX: 60,

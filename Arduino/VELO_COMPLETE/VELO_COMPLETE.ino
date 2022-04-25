@@ -12,7 +12,7 @@
 
 /* Set the delay between fresh samples */
 uint16_t BNO055_SAMPLERATE_DELAY_MS = 50;
-Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28);
+Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x29);
 double v0 = 0;
 double delt = BNO055_SAMPLERATE_DELAY_MS / 1000;
 double v; 

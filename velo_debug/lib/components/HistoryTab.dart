@@ -12,7 +12,7 @@ class HistoryTab extends StatelessWidget {
     var sizeConfig = SizeConfig(context);
     return Container(
       decoration: BoxDecoration(
-          color: Colors.orangeAccent,
+          color: Theme.of(context).accentColor,
       ),
 
       child: SizedBox(
