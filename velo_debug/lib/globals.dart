@@ -10,6 +10,7 @@ List<String> _receivedData = <String>[];
 List<String> _formatted = <String>[];
 String _finalData = "";
 String _oldData = "";
+bool connected = false;
 const List<List<int>> ColorSchemeData = [[0xFFFFE8D6, 0xFF15232B, 0xFFFF4D19],[0xFFF5F4DA, 0xFF1B1B29, 0xFFB1B025]];
 int _color = 0;
 
@@ -18,15 +19,24 @@ List<BluetoothDevice> devices = [];
 void initializeGlobals(){
   _readColor();
 }
-
+void setConnected(bool b){connected = b;}
+bool getConnected(){return connected;}
 void setDevice(BluetoothDevice d) => devices.insert(0, d);
 void deleteDevice() => devices.clear();
 
-bool isConnected(){
-  print("Device State: ${devices[0].state}      ==================================================");
-  if(devices[0].state == BluetoothDeviceState.connected){
+Future<bool> isConnected() async{
+  //print("Device State: ${devices[0].state}      ==================================================");
+  print(devices);
+  if(devices.isEmpty){
+    print("Device is empty");
+    print("Device not Connected");
+    return false;
+  }else if(devices[0].state == BluetoothDeviceState.connected){
+    print("Device Connected");
     return true;
   } else{
+    print("Device has disconnected");
+    print("Device not Connected");
     deleteDevice();
     return false;
   }

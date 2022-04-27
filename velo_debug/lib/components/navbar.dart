@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class BottomNavBar extends StatelessWidget{
+  BottomNavBar({this.screen = "home"});
+  final screen;
   @override
   Widget build(BuildContext context){
     return BottomAppBar(
@@ -22,7 +24,7 @@ class BottomNavBar extends StatelessWidget{
             IconButton(
               tooltip: 'VELO Icon',
               onPressed: (){
-                Navigator.of(context).pushNamed('home');
+                Navigator.of(context).pushNamed('$screen');
               },
               //icon: const Icon(Icons.circle)),
               icon: const Image(image: AssetImage('assets/icons/icon_velo_dark.png'),)),

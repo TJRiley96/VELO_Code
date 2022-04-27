@@ -5,13 +5,16 @@ import 'package:velo_debug/components/graphContainer.dart';
 import 'package:velo_debug/components/navbar.dart';
 import 'package:velo_debug/components/size_config.dart';
 import 'package:velo_debug/components/weekTab.dart';
+import 'package:velo_debug/globals.dart' as globals;
 
 class HomePage extends StatelessWidget {
+  String screen = "/home";
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: _buildContent(context),
-      bottomNavigationBar: BottomNavBar(),
+      bottomNavigationBar: globals.getConnected()? BottomNavBar(screen: "/chart",) : BottomNavBar(),
     );
   }
 

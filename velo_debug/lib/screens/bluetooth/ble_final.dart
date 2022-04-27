@@ -88,6 +88,7 @@ class FindDevicesScreen extends StatelessWidget {
                             child: Text('Disconnect'),
                             onPressed: () {
                                   d.disconnect();
+                                  globals.setConnected(false);
                                   globals.deleteDevice();},
                           );
                         }
@@ -109,6 +110,7 @@ class FindDevicesScreen extends StatelessWidget {
                       onTap: () async {
                         r.device.connect();
                         globals.setDevice(r.device);
+                        globals.setConnected(true);
                         final mtu = await r.device.mtu.first;
                         print(mtu);
                         await r.device.requestMtu(512);
