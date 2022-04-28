@@ -36,6 +36,7 @@ class _MyAppState extends State<MyApp> {
           create: (context) => ThemeProvider(),
           builder: (context, _) {
             return MaterialApp(
+              debugShowCheckedModeBanner: false,
               title: 'VELO Debug',
               theme: Provider
                   .of<ThemeProvider>(context)
