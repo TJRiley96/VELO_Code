@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:velo_debug/components/route_generator.dart';
+import 'package:velo_debug/components/theme_mode.dart';
 import 'package:velo_debug/globals.dart' as globals;
 
 void main() {
@@ -15,35 +17,33 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int _color =  0;
+  int _color = 0;
+
   @override
-  void initState(){
+  void initState() {
     super.initState();
     setup();
   }
-  Future<void> setup() async{
+
+  Future<void> setup() async {
     var i = await globals.getColor();
     _color = i;
-}
-  @override
-  Widget build(BuildContext context) {
-
-    return MaterialApp(
-      title: 'VELO Debug',
-      theme: ThemeData(
-        primaryColor: Color(globals.ColorSchemeData[_color][0]),
-        backgroundColor: Color(globals.ColorSchemeData[_color][1]),
-        accentColor: Color(globals.ColorSchemeData[_color][2]),
-        textTheme: TextTheme(
-          bodyText2: TextStyle(
-            color: Color(0xFF333333),
-          )
-        ),
-        primarySwatch: Colors.orange,
-      ),
-      initialRoute: '/',
-      onGenerateRoute: RouteGenerator.generateRoute,
-
-    );
   }
+
+  @override
+  Widget build(BuildContext context) =>
+      ChangeNotifierProvider(
+          create: (context) => ThemeProvider(),
+          builder: (context, _) {
+            return MaterialApp(
+              title: 'VELO Debug',
+              theme: Provider
+                  .of<ThemeProvider>(context)
+                  .current,
+              initialRoute: '/',
+              onGenerateRoute: RouteGenerator.generateRoute,
+
+            );
+          }
+      );
 }

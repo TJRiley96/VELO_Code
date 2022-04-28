@@ -13,6 +13,10 @@ String _oldData = "";
 bool connected = false;
 const List<List<int>> ColorSchemeData = [[0xFFFFE8D6, 0xFF15232B, 0xFFFF4D19],[0xFFF5F4DA, 0xFF1B1B29, 0xFFB1B025]];
 int _color = 0;
+DateTime now = new DateTime.now();
+DateTime date = new DateTime(now.year, now.month, now.day);
+String filename = "${date.year}-${date.month}-${date.day}";
+Future<List<List<double>>> try2 = loadGraph();
 
 List<BluetoothDevice> devices = [];
 
@@ -91,6 +95,33 @@ Future<void> _writeData() async {
   await _myFile.writeAsString( _output, mode: FileMode.append, encoding: utf8);
   _formatted.clear();
   _receivedData.clear();
+}
+Future<List<List<double>>> loadGraph() async {
+  List<List<double>> data = [];
+  List<String> readIn;
+
+  final _dirPath = await _getDirPath();
+  //if(!File('$_dirPath/$filename.txt').existsSync()){ print("File Doesn't Exist!!"); return data;}
+  final _myFile = File('$_dirPath/$filename.txt');
+  readIn = await _myFile.readAsLines(encoding: utf8);
+  print(readIn);
+  readIn.forEach((e) {
+    List<double> send = [];
+     List<String> con = e.split(',');
+     con.forEach((element) {send.add(double.parse(element)); });
+     print(send);
+     data.add(send);
+  });
+  return data;
+}
+Future<void> appendFile(double index, double acl, double ori, double flex) async {
+  final _dirPath = await _getDirPath();
+  print('$_dirPath');
+  var toFile = [index, acl, ori, flex];
+  final _myFile = File('$_dirPath/$filename.txt');
+  await _myFile.writeAsString( toFile.join(',').toString() + "\n", mode: FileMode.append, encoding: utf8);
+  toFile.clear();
+
 }
 List<String> parseData(String data){
   List<String> parsed;

@@ -1,7 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:velo_debug/components/size_config.dart';
-
+List<String> months = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+];
 class WeekTab extends StatelessWidget {
+  DateTime now = new DateTime.now();
+
   Widget build(BuildContext context) {
     return Container(
       child: _buildContent(context),
@@ -9,6 +24,7 @@ class WeekTab extends StatelessWidget {
   }
 
   Widget _buildContent(context) {
+    DateTime date = new DateTime(now.year, now.month, now.day);
     var sizeConfig = SizeConfig(context);
     return Container(
       decoration: BoxDecoration(
@@ -19,7 +35,7 @@ class WeekTab extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Text(
-              "November 29, 2021",
+              "${months[date.month-1]} ${date.day}, ${date.year}",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'Futura',

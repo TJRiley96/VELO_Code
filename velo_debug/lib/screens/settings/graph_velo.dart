@@ -18,7 +18,7 @@ class VeloGraph extends StatefulWidget {
 class _VeloGraphState extends State<VeloGraph> {
   double _count = 0;
   double _maxY = 5;
-  double _minY = 5;
+  double _minY = -5;
 
   final List<FlSpot> dotList = <FlSpot>[];
 
@@ -27,13 +27,15 @@ class _VeloGraphState extends State<VeloGraph> {
 
   @override
   Widget build(BuildContext context) {
-    return _buildGraph();
+    return _buildGraph(context);
   }
 
-  Widget _buildGraph(){
+  Widget _buildGraph(BuildContext context){
     return Scaffold(
+      backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
-        title: Text("Battery Chart"),
+        title: Text("VELO Device"),
+        backgroundColor: Theme.of(context).accentColor,
       ),
       body: StreamBuilder<List<String>>(
         stream: BLENotify(d: globals.getDevice()).stream,
@@ -45,13 +47,18 @@ class _VeloGraphState extends State<VeloGraph> {
               child: Text("ERROR!"),
             );
           }else {
-            return Center(
-                child:SizedBox(
-                  height: 500,
-                  width: 600,
-                  child: _buildChart(context, snapshot.data),
-                )
-            );
+            final data = snapshot.data!;
+            if (data.isNotEmpty) {
+              return Center(
+                  child: SizedBox(
+                    height: 500,
+                    width: 600,
+                    child: _buildChart(context, snapshot.data),
+                  )
+              );
+            } else {
+              return Center(child: CircularProgressIndicator(),);
+            }
           }
         },
       ),
@@ -107,26 +114,40 @@ class _VeloGraphState extends State<VeloGraph> {
       double ori = double.parse(data1[1]);
       double flx = double.parse(data1[2]);
 
-      if(ori < 0){
-        ori += 180;
-      }else if(ori > 0){
-        ori -= 180;
+      if(ori < 0.0){
+        ori += 180.0;
+      }else if(ori > 0.0){
+        ori -= 180.0;
+      }else{
+        ori = 0.0;
       }
       final FlSpot temp1 = FlSpot(_count, acl);
       final FlSpot temp2 = FlSpot(_count, ori);
       final FlSpot temp3 = FlSpot(_count, flx);
-      if(acl > _maxY){
-        _maxY = acl;
-      } else if (acl < _minY){
-        _minY = acl;
+      if((acl > _maxY) || (acl < _minY) || (ori > _maxY) || (ori < _minY)){
+        if(ori > _maxY){
+          _maxY = ori;
+        } else if(ori < _minY){
+          _minY = ori;
+        } else if(acl > _maxY){
+          _maxY = acl;
+        } else if (acl < _minY){
+          _minY = acl;
+        }
+
       }
+
       _addToList(dotList, temp1);
       _addToList(dotList2, temp2);
       _addToList(dotList3, temp3);
+      globals.appendFile(_count, acl, ori, flx);
+      _count++;
     }
-    _count++;
+
+
     return LineChart(
       LineChartData(
+        backgroundColor: Theme.of(context).primaryColor,
         minX: (_count - 60),
         minY: _minY,
         maxX: _count,
