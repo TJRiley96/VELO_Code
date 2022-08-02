@@ -6,6 +6,7 @@ import 'package:velo_debug/screens/settings/color_screen.dart';
 import 'package:velo_debug/screens/settings/graph_battery.dart';
 import 'package:velo_debug/screens/settings/graph_velo.dart';
 import 'package:velo_debug/screens/settings/settings_screen.dart';
+import 'package:velo_debug/screens/settings/tab_velo.dart';
 import 'package:velo_debug/screens/sign_in/sign_in_screen.dart';
 import 'package:velo_debug/screens/homepage/homepage.dart';
 import 'package:velo_debug/screens/splash_screen.dart';
@@ -39,6 +40,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => StreamChartAgain());
       case '/settings/bat':
         return MaterialPageRoute(builder: (_) => BatteryGraph());
+      case '/settings/multi':
+        return MaterialPageRoute(builder: (_) => VeloTab());
         // If args is not of the correct type, return an error page.
         // You can also throw an exception while in development.
       default:

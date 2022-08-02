@@ -75,7 +75,7 @@ class SettingsScreen extends StatelessWidget{
           ),
           ElevatedButton(
             onPressed: (){
-              Navigator.of(context).pushNamed('/settings/bat');
+              Navigator.of(context).pushNamed('/settings/multi');
             },
             style: btnStyle(context),
             child: Text("Battery Chart"),

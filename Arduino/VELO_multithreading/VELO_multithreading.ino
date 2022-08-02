@@ -51,7 +51,7 @@ void getSensor(void * pvPrameter){
     bno.getEvent(&linearAccelData, Adafruit_BNO055::VECTOR_LINEARACCEL);
     //flex = flexRead();
 //    delay(BNO055_SAMPLERATE_DELAY_MS);
-//    flexTest();
+    flexTest();
      vTaskDelay(50);
       
   }
@@ -71,9 +71,9 @@ void getFlex(void * pvPrameter){
       num2 = (uint8_t)buf[3];
       num1 = (uint8_t)buf[2];
 //     num = num | num2;
-      num = (num1<<8) + num2;
-      Serial.print(num);
-      flex = num/100.0;
+//    num = (num1<<8) + num2;
+//      Serial.print(num);
+      flex = num1;
 //      delay(500);
     }
       Serial.println(); 
@@ -128,14 +128,14 @@ void BNO_CONFIG(){
 }
 //Configure Flex Sensor
 void FLEX_CONFIG(){
-//  
-//  delay(1000);
-//  Serial2.write("CD=0\r");
-//  delay(1);
-//  Serial2.write("CP=0\r");
-//  Serial2.write("CR=1\r");
-//  Serial.println("Setup complete");
-//  delay(1000);
+  
+  delay(1000);
+  Serial2.write("CD=0\r");
+  delay(1);
+  Serial2.write("CP=0\r");
+  Serial2.write("CR=1\r");
+  Serial.println("Setup complete");
+  delay(1000);
 }
 
 ////Fucntion for parsing flex sensor data
